@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Customer Response Assistant — Malik Morrar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --white:#ffffff; --off:#f8f7f4; --ink:#181816; --mid:#62625d; --light:#c8c8c2; --rule:#e8e7e2; --accent:#1a3fff; }
+html { scroll-behavior: smooth; }
+body { background: var(--white); color: var(--ink); font-family: 'Epilogue', sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+
+/* NAV */
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; padding: 0 60px; height: 62px; }
+.logo { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+nav { display: flex; gap: 32px; align-items: center; }
+nav a { font-size: 13px; font-weight: 400; color: var(--mid); text-decoration: none; transition: color 0.15s; }
+nav a:hover { color: var(--ink); }
+.nav-back { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--mid); text-decoration: none; transition: color 0.15s; }
+.nav-back:hover { color: var(--ink); }
+
+/* HERO */
+.project-hero {
+  padding-top: 62px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--white);
+}
+.project-hero-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 80px 60px 72px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--light);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  transition: color 0.15s;
+}
+.back-link:hover { color: var(--ink); }
+
+.project-meta-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.project-type-badge {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(26,63,255,0.25);
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+.project-date { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
+
+.project-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 6vw, 80px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--ink);
+  margin-bottom: 32px;
+  max-width: 800px;
+}
+.project-title em { font-style: italic; color: var(--mid); }
+
+.project-tagline {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--mid);
+  max-width: 620px;
+  margin-bottom: 52px;
+}
+
+.project-stats {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+  display: inline-flex;
+}
+.stat {
+  padding: 24px 40px;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 11px; color: var(--light); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* CONTENT */
+.project-body {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.content-section {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 60px;
+  padding: 64px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.content-section:last-child { border-bottom: none; }
+
+.content-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--light);
+  padding-top: 4px;
+  font-weight: 400;
+}
+
+.content-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.content-body p {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--mid);
+  margin-bottom: 16px;
+}
+.content-body p:last-child { margin-bottom: 0; }
+
+/* Flow diagram */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 32px 0;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 100px;
+}
+.flow-icon {
+  width: 52px; height: 52px;
+  background: var(--off);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.flow-step-label {
+  font-size: 11px;
+  color: var(--mid);
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+.flow-arrow {
+  font-size: 16px;
+  color: var(--light);
+  margin: 0 4px;
+  padding-bottom: 22px;
+  flex-shrink: 0;
+}
+
+/* Stack grid */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-top: 8px;
+}
+.stack-item {
+  background: var(--white);
+  padding: 20px 22px;
+}
+.stack-item-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.stack-item-desc { font-size: 12px; color: var(--light); line-height: 1.5; }
+
+/* Bullet list */
+.detail-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.detail-list li { font-size: 15px; line-height: 1.7; color: var(--mid); padding-left: 20px; position: relative; }
+.detail-list li::before { content: '—'; position: absolute; left: 0; color: var(--light); font-size: 12px; top: 3px; }
+
+/* Result cards */
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-top: 8px;
+}
+.result-card {
+  background: var(--off);
+  padding: 28px 24px;
+}
+.result-card-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.result-card-label { font-size: 12px; color: var(--mid); line-height: 1.5; }
+
+/* Footer */
+footer { border-top: 1px solid var(--rule); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; }
+footer p { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
+
+/* Fade */
+.fade { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.fade.in { opacity: 1; transform: none; }
+.fade.d1 { transition-delay: 0.08s; } .fade.d2 { transition-delay: 0.16s; } .fade.d3 { transition-delay: 0.24s; }
+.h-fade { opacity: 0; transform: translateY(16px); animation: hfade 0.7s ease forwards; }
+.h-fade.d1 { animation-delay: 0.1s; } .h-fade.d2 { animation-delay: 0.25s; } .h-fade.d3 { animation-delay: 0.4s; } .h-fade.d4 { animation-delay: 0.55s; }
+@keyframes hfade { to { opacity: 1; transform: none; } }
+
+@media (max-width: 768px) {
+  header { padding: 0 24px; }
+  .project-hero-inner { padding: 60px 24px 48px; }
+  .project-body { padding: 0 24px; }
+  .content-section { grid-template-columns: 1fr; gap: 20px; padding: 44px 0; }
+  .stack-grid, .result-cards { grid-template-columns: 1fr 1fr; }
+  .project-stats { flex-direction: column; }
+  footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Malik Morrar</a>
+  <nav>
+    <a href="index.html#projects">← All Projects</a>
+    <a href="index.html#contact" class="nav-cta" style="padding:8px 20px; background:var(--ink); color:var(--white); border-radius:3px;">Contact</a>
+  </nav>
+</header>
+
+<div class="project-hero">
+  <div class="project-hero-inner">
+    <a href="index.html#projects" class="back-link">← Back to Projects</a>
+    <div class="project-meta-top h-fade d1">
+      <span class="project-type-badge">AI / Automation</span>
+      <span class="project-date">Sep 2025 – Jan 2026</span>
+    </div>
+    <h1 class="project-title h-fade d2">AI Customer<br>Response <em>Assistant</em></h1>
+    <p class="project-tagline h-fade d3">An end-to-end AI voice system that handles inbound customer calls autonomously — classifying intent, routing responses, and logging everything to CRM without human intervention.</p>
+    <div class="project-stats h-fade d4">
+      <div class="stat">
+        <div class="stat-num">+25%</div>
+        <div class="stat-label">Booking Conversion</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Automated CRM Logging</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Manual Call Processing</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <div class="content-section fade">
+    <div class="content-label">Overview</div>
+    <div class="content-body">
+      <h3>The Problem</h3>
+      <p>Businesses handling high inbound call volume face a real bottleneck: every missed or slow-handled call is a lost customer. Manual call handling is inconsistent, slow, and doesn't scale. The goal was to build a system that could receive, understand, and respond to customer calls automatically — 24/7, without staff involvement.</p>
+      <h3 style="margin-top:28px;">The Solution</h3>
+      <p>I built a fully automated AI voice assistant using Twilio Voice API as the telephony layer. When a call comes in, Twilio routes it via webhook to a custom backend that processes the audio in real time using speech-to-text. The transcript is passed to the OpenAI API, which classifies the caller's intent and determines the appropriate response flow. The assistant replies via text-to-speech and can handle bookings, answer FAQs, and route edge cases through fallback logic. Every interaction is transcribed, structured, and automatically pushed to HubSpot CRM via Zapier — creating a full audit trail with zero manual entry.</p>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">How It Works</div>
+    <div class="content-body">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-icon">📞</div>
+          <div class="flow-step-label">Inbound Call<br>via Twilio</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">🎙️</div>
+          <div class="flow-step-label">Speech-to-Text<br>Transcription</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">🧠</div>
+          <div class="flow-step-label">OpenAI Intent<br>Classification</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">🔀</div>
+          <div class="flow-step-label">Conditional<br>Response Routing</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">🗂️</div>
+          <div class="flow-step-label">Auto-log to<br>HubSpot via Zapier</div>
+        </div>
+      </div>
+      <p>The system is designed for reliability — edge cases and unrecognized intents trigger fallback routing to ensure continuity. Error handling is built into every stage of the pipeline.</p>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Stack</div>
+    <div class="content-body">
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-name">Twilio Voice API</div>
+          <div class="stack-item-desc">Telephony layer — receives calls, manages audio streams, handles text-to-speech output</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">OpenAI API</div>
+          <div class="stack-item-desc">Natural language understanding — classifies caller intent and generates context-aware responses</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Webhook Routing</div>
+          <div class="stack-item-desc">Custom backend logic for call flow, conditional branching, and fallback handling</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Speech-to-Text</div>
+          <div class="stack-item-desc">Real-time audio transcription — converts caller audio to structured text for processing</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Zapier</div>
+          <div class="stack-item-desc">Automation layer — syncs transcriptions and call data to HubSpot CRM automatically</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">HubSpot CRM</div>
+          <div class="stack-item-desc">Data destination — stores all call records, transcripts, and customer interactions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Key Details</div>
+    <div class="content-body">
+      <ul class="detail-list">
+        <li>Engineered webhook routing to process inbound call traffic efficiently with low latency</li>
+        <li>Implemented real-time speech-to-text processing for accurate transcription during live calls</li>
+        <li>Integrated OpenAI API to classify caller intent across multiple categories (bookings, FAQs, complaints)</li>
+        <li>Developed call flow logic with text-to-speech responses and conditional routing based on intent</li>
+        <li>Built error handling and fallback routing to maintain continuity for unrecognized edge cases</li>
+        <li>Automated full transcription logging to HubSpot via Zapier — zero manual CRM entry</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Results</div>
+    <div class="content-body">
+      <div class="result-cards">
+        <div class="result-card">
+          <div class="result-card-num">+25%</div>
+          <div class="result-card-label">Improvement in booking conversion rate through faster, more consistent call handling</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num">100%</div>
+          <div class="result-card-label">Automated CRM data logging — every call transcribed and stored without manual input</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num">24/7</div>
+          <div class="result-card-label">Availability — the system handles calls around the clock without staff involvement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Malik Morrar</p>
+  <p><a href="index.html" style="color:var(--light); text-decoration:none;">← Back to Portfolio</a></p>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

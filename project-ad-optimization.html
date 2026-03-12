@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Ad Performance Optimization — Malik Morrar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Epilogue:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --white:#ffffff; --off:#f8f7f4; --ink:#181816; --mid:#62625d; --light:#c8c8c2; --rule:#e8e7e2; --accent:#1a3fff; }
+html { scroll-behavior: smooth; }
+body { background: var(--white); color: var(--ink); font-family: 'Epilogue', sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; padding: 0 60px; height: 62px; }
+.logo { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+nav { display: flex; gap: 32px; align-items: center; }
+nav a { font-size: 13px; font-weight: 400; color: var(--mid); text-decoration: none; transition: color 0.15s; }
+nav a:hover { color: var(--ink); }
+
+.project-hero { padding-top: 62px; border-bottom: 1px solid var(--rule); }
+.project-hero-inner { max-width: 1160px; margin: 0 auto; padding: 80px 60px 72px; }
+.back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--light); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 48px; transition: color 0.15s; }
+.back-link:hover { color: var(--ink); }
+.project-meta-top { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.project-type-badge { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(26,63,255,0.25); padding: 4px 12px; border-radius: 2px; }
+.project-date { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
+.project-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 6vw, 80px); font-weight: 400; letter-spacing: -0.03em; line-height: 1.02; color: var(--ink); margin-bottom: 32px; max-width: 800px; }
+.project-title em { font-style: italic; color: var(--mid); }
+.project-tagline { font-size: 17px; line-height: 1.75; color: var(--mid); max-width: 620px; margin-bottom: 52px; }
+.project-stats { border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); display: inline-flex; }
+.stat { padding: 24px 40px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 400; color: var(--ink); letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--light); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.project-body { max-width: 1160px; margin: 0 auto; padding: 0 60px; }
+.content-section { display: grid; grid-template-columns: 220px 1fr; gap: 60px; padding: 64px 0; border-bottom: 1px solid var(--rule); }
+.content-section:last-child { border-bottom: none; }
+.content-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light); padding-top: 4px; }
+.content-body h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 400; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 16px; }
+.content-body p { font-size: 15px; line-height: 1.85; color: var(--mid); margin-bottom: 16px; }
+.content-body p:last-child { margin-bottom: 0; }
+
+/* Pipeline diagram */
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 24px 0;
+}
+.pipeline-step {
+  background: var(--white);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.pipeline-step:hover { background: var(--off); }
+.step-num { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--light); font-weight: 400; }
+.step-content-title { font-size: 14px; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+.step-content-desc { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+.stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--rule); border: 1px solid var(--rule); margin-top: 8px; }
+.stack-item { background: var(--white); padding: 20px 22px; }
+.stack-item-name { font-size: 14px; font-weight: 400; color: var(--ink); margin-bottom: 4px; }
+.stack-item-desc { font-size: 12px; color: var(--light); line-height: 1.5; }
+
+.detail-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.detail-list li { font-size: 15px; line-height: 1.7; color: var(--mid); padding-left: 20px; position: relative; }
+.detail-list li::before { content: '—'; position: absolute; left: 0; color: var(--light); font-size: 12px; top: 3px; }
+
+.result-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--rule); border: 1px solid var(--rule); margin-top: 8px; }
+.result-card { background: var(--off); padding: 28px 24px; }
+.result-card-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); letter-spacing: -0.03em; margin-bottom: 8px; }
+.result-card-label { font-size: 12px; color: var(--mid); line-height: 1.5; }
+
+footer { border-top: 1px solid var(--rule); padding: 28px 60px; display: flex; justify-content: space-between; align-items: center; }
+footer p { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
+
+.fade { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.fade.in { opacity: 1; transform: none; }
+.fade.d1 { transition-delay: 0.08s; } .fade.d2 { transition-delay: 0.16s; }
+.h-fade { opacity: 0; transform: translateY(16px); animation: hfade 0.7s ease forwards; }
+.h-fade.d1 { animation-delay: 0.1s; } .h-fade.d2 { animation-delay: 0.25s; } .h-fade.d3 { animation-delay: 0.4s; } .h-fade.d4 { animation-delay: 0.55s; }
+@keyframes hfade { to { opacity: 1; transform: none; } }
+
+@media (max-width: 768px) {
+  header { padding: 0 24px; }
+  .project-hero-inner, .project-body { padding-left: 24px; padding-right: 24px; }
+  .content-section { grid-template-columns: 1fr; gap: 20px; padding: 44px 0; }
+  .stack-grid, .result-cards { grid-template-columns: 1fr 1fr; }
+  .project-stats { flex-direction: column; }
+  footer { padding: 20px 24px; flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Malik Morrar</a>
+  <nav>
+    <a href="index.html#projects">← All Projects</a>
+    <a href="index.html#contact" style="padding:8px 20px; background:var(--ink); color:var(--white); border-radius:3px;">Contact</a>
+  </nav>
+</header>
+
+<div class="project-hero">
+  <div class="project-hero-inner">
+    <a href="index.html#projects" class="back-link">← Back to Projects</a>
+    <div class="project-meta-top h-fade d1">
+      <span class="project-type-badge">Data / Analytics</span>
+      <span class="project-date">Mar 2025 – May 2025</span>
+    </div>
+    <h1 class="project-title h-fade d2">AI Ad Performance<br><em>Optimization System</em></h1>
+    <p class="project-tagline h-fade d3">An AI-assisted analytics pipeline that ingests live Google Ads data, surfaces optimization opportunities, and automates bid adjustments — reducing cost per lead and freeing up hours of manual work.</p>
+    <div class="project-stats h-fade d4">
+      <div class="stat">
+        <div class="stat-num">~18%</div>
+        <div class="stat-label">Lower Cost Per Lead</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">~20%</div>
+        <div class="stat-label">More Consistent Leads</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">~30%</div>
+        <div class="stat-label">Less Manual Work</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="project-body">
+
+  <div class="content-section fade">
+    <div class="content-label">Overview</div>
+    <div class="content-body">
+      <h3>The Problem</h3>
+      <p>Managing Google Ads campaigns across multiple clients manually is slow, error-prone, and doesn't scale. Campaign managers spend hours pulling data, spotting trends, and adjusting bids — time that could be better spent on strategy. Performance gaps go unnoticed until they've already cost money.</p>
+      <h3 style="margin-top:28px;">The Solution</h3>
+      <p>I built an AI-assisted analytics pipeline that automatically ingests Google Ads performance data, tracks key KPIs, and uses AI-driven analysis to surface optimization opportunities. The system automatically adjusts bids based on performance insights and generates real-time dashboards for full campaign visibility — turning what was a manual daily process into an automated, always-on system.</p>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Pipeline</div>
+    <div class="content-body">
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-content-title">Data Ingestion</div>
+            <div class="step-content-desc">Automatically pulls live performance data from the Google Ads API — impressions, clicks, CTR, CPC, conversions, and cost per lead across all client accounts</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-content-title">AI Performance Analysis</div>
+            <div class="step-content-desc">AI evaluates CTR, CPC, and conversion trends to identify underperforming keywords, ad groups, and campaigns — surfacing actionable optimization opportunities</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-content-title">Automated Bid Adjustment</div>
+            <div class="step-content-desc">Based on AI insights, the system automatically adjusts keyword bids and targeting parameters to improve efficiency — reducing manual intervention by ~30%</div>
+          </div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-content-title">Real-Time Dashboards</div>
+            <div class="step-content-desc">Live visualizations surface campaign performance, trend data, and optimization impact — enabling fast, data-driven decision making</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Stack</div>
+    <div class="content-body">
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-item-name">Python</div>
+          <div class="stack-item-desc">Core pipeline language — data ingestion, processing, AI analysis, and automation logic</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Google Ads API</div>
+          <div class="stack-item-desc">Data source — pulls live campaign performance metrics across all client accounts</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">AI Analytics</div>
+          <div class="stack-item-desc">Evaluates KPI trends, identifies gaps, and generates optimization recommendations</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Dashboard Design</div>
+          <div class="stack-item-desc">Real-time visualization layer for campaign performance and optimization tracking</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Bid Automation</div>
+          <div class="stack-item-desc">Automated keyword bid adjustment workflows based on performance signal thresholds</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-item-name">Data Analytics</div>
+          <div class="stack-item-desc">Statistical analysis of CTR, CPC, ROI, and conversion trends across time periods</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Key Details</div>
+    <div class="content-body">
+      <ul class="detail-list">
+        <li>Built an automated pipeline to ingest Google Ads data and track KPIs — improving lead generation consistency by ~20%</li>
+        <li>Implemented AI-driven analysis to evaluate CTR, CPC, and conversion trends across all client accounts</li>
+        <li>Optimized keyword targeting and bid strategies using performance insights to improve conversion efficiency</li>
+        <li>Developed real-time dashboards to visualize campaign performance and support data-driven optimization decisions</li>
+        <li>Automated bid adjustment workflows to reduce manual intervention by ~30% and scale optimization across accounts</li>
+        <li>Identified and closed performance gaps that reduced cost per lead by approximately 18%</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="content-section fade">
+    <div class="content-label">Results</div>
+    <div class="content-body">
+      <div class="result-cards">
+        <div class="result-card">
+          <div class="result-card-num">~18%</div>
+          <div class="result-card-label">Reduction in cost per lead through AI-driven bid optimization and targeting improvements</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num">~20%</div>
+          <div class="result-card-label">Improvement in lead generation consistency by tracking and closing KPI performance gaps</div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-num">~30%</div>
+          <div class="result-card-label">Reduction in manual intervention through automated bid adjustment workflows</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Malik Morrar</p>
+  <p><a href="index.html" style="color:var(--light); text-decoration:none;">← Back to Portfolio</a></p>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
