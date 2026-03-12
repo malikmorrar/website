@@ -437,13 +437,13 @@ footer {
 }
 footer p { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
 
-/* FADE */
-.fade { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
-.fade.in { opacity: 1; transform: none; }
+/* FADE — hidden only when JS is ready */
+.js-ready .fade { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.js-ready .fade.in { opacity: 1; transform: none; }
 .fade.d1 { transition-delay: 0.08s; }
 .fade.d2 { transition-delay: 0.16s; }
 .fade.d3 { transition-delay: 0.24s; }
-.h-fade { opacity: 0; transform: translateY(16px); animation: hfade 0.7s ease forwards; }
+.js-ready .h-fade { opacity: 0; transform: translateY(16px); animation: hfade 0.7s ease forwards; }
 .h-fade.d1 { animation-delay: 0.1s; }
 .h-fade.d2 { animation-delay: 0.25s; }
 .h-fade.d3 { animation-delay: 0.4s; }
@@ -764,4 +764,12 @@ footer p { font-size: 12px; color: var(--light); letter-spacing: 0.04em; }
   <p>Los Angeles, CA</p>
 </footer>
 
-<script data-cfas
+<script>
+  document.documentElement.classList.add('js-ready');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
